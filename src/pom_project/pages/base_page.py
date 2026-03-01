@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from re import Pattern
+from urllib.parse import urljoin
 
 from playwright.sync_api import Locator, Page, expect
 
@@ -13,6 +14,9 @@ class BasePage:
 
     def goto(self, url: str) -> None:
         self.page.goto(url, wait_until="domcontentloaded")
+
+    def goto_path(self, base_url: str, path: str) -> None:
+        self.goto(urljoin(base_url, path))
 
     def locator(self, selector: str) -> Locator:
         return self.page.locator(selector)

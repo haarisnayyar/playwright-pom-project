@@ -9,6 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      APP_URL: ${{ vars.APP_URL || 'https://automationteststore.com/' }}
+      ATS_LOGIN_USERNAME: ${{ secrets.ATS_LOGIN_USERNAME }}
+      ATS_LOGIN_PASSWORD: ${{ secrets.ATS_LOGIN_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,5 +39,18 @@ jobs:
           mypy src
 
       - name: Run tests
+        if: ${{ env.ATS_LOGIN_USERNAME != '' && env.ATS_LOGIN_PASSWORD != '' }}
         run: |
-          pytest -q
+          pytest -q --html=reports/pytest-report.html --self-contained-html --alluredir=reports/allure-results
+
+      - name: Skip e2e tests if secrets are missing
+        if: ${{ env.ATS_LOGIN_USERNAME == '' || env.ATS_LOGIN_PASSWORD == '' }}
+        run: |
+          echo "ATS_LOGIN_USERNAME/ATS_LOGIN_PASSWORD are not set; skipping login e2e test run."
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/

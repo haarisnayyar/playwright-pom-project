@@ -1,9 +1,22 @@
-from pom_project.pages.home_page import HomePage
+import allure
+
+from pom_project.pages.account_page import AccountPage
+from pom_project.pages.login_page import LoginPage
 
 
-def test_navigate_example(page, app_url: str) -> None:
-    home_page = HomePage(page)
+@allure.title("Returning customer can log in to Automation Test Store")
+def test_user_can_login_to_automation_test_store(
+    page, app_url: str, login_username: str, login_password: str
+) -> None:
+    login_page = LoginPage(page)
+    account_page = AccountPage(page)
 
-    home_page.goto(app_url)
-    home_page.expect_title("Example Domain")
-    home_page.expect_header_text("Example Domain")
+    with allure.step("Open login page"):
+        login_page.open(app_url)
+        login_page.expect_loaded()
+
+    with allure.step("Submit valid credentials"):
+        login_page.login(login_username, login_password)
+
+    with allure.step("Verify account page is displayed"):
+        account_page.expect_loaded()
