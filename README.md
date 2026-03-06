@@ -74,6 +74,20 @@ Headed version:
 pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit --headed --slowmo 250
 ```
 
+## Task 3 Scenario 2
+
+Run SauceDemo valid-login scenario:
+
+```bash
+pytest -q tests/task3/test_scenario_2_valid_login.py
+```
+
+Run the same scenario across all browsers:
+
+```bash
+pytest -q tests/task3/test_scenario_2_valid_login.py --browser chromium --browser firefox --browser webkit
+```
+
 ## Generate reports (Allure + HTML)
 
 ```bash

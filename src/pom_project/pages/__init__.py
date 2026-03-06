@@ -4,6 +4,14 @@ from .account_page import AccountPage
 from .base_page import BasePage
 from .home_page import HomePage
 from .login_page import LoginPage
+from .saucedemo_inventory_page import SauceDemoInventoryPage
 from .saucedemo_login_page import SauceDemoLoginPage
 
-__all__ = ["AccountPage", "BasePage", "HomePage", "LoginPage", "SauceDemoLoginPage"]
+__all__ = [
+    "AccountPage",
+    "BasePage",
+    "HomePage",
+    "LoginPage",
+    "SauceDemoInventoryPage",
+    "SauceDemoLoginPage",
+]
