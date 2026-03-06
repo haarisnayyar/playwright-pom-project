@@ -42,7 +42,7 @@ def pytest_configure(config: pytest.Config) -> None:
     if not config.option.browser:
         config_path = config.getoption("--framework-config")
         framework_cfg = load_framework_config(config_path=config_path)
-        config.option.browser = [framework_cfg.browser]
+        config.option.browser = framework_cfg.browsers
 
 
 @pytest.fixture(scope="session")

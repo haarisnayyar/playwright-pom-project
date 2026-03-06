@@ -1,5 +1,5 @@
 [framework]
-browser = "chromium"
+browsers = ["chromium"]
 base_url = "https://automationteststore.com/"
 credential_key = "automationteststore_user"
 db_path = "data/test_data.sqlite3"

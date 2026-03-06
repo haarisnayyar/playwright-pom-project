@@ -21,6 +21,7 @@ Set values in `.env`:
 
 - `APP_URL`
 - `BROWSER` (`chromium`, `firefox`, `webkit`)
+- `BROWSERS` (optional comma-separated loop, for example `chromium,firefox,webkit`)
 - `ATS_LOGIN_USERNAME`
 - `ATS_LOGIN_PASSWORD`
 - `SAUCEDEMO_URL`
@@ -60,6 +61,18 @@ Run SauceDemo invalid-login scenario:
 pytest -q tests/task3/test_scenario_1_invalid_login.py
 ```
 
+Run the same scenario in a Safari-inclusive loop (Playwright Safari = `webkit`):
+
+```bash
+pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit
+```
+
+Headed version:
+
+```bash
+pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit --headed --slowmo 250
+```
+
 ## Generate reports (Allure + HTML)
 
 ```bash
@@ -91,5 +104,9 @@ allure serve reports/allure-results
 
 - Example cross-browser run from env:
   - `BROWSER=firefox pytest -q`
+- Example Safari run:
+  - `BROWSER=webkit pytest -q`
+- Example browser loop from env:
+  - `BROWSERS=chromium,firefox,webkit pytest -q tests/task3/test_scenario_1_invalid_login.py`
 - Example full override run:
   - `APP_URL=https://staging.your-app.com BROWSER=webkit ATS_LOGIN_USERNAME=user ATS_LOGIN_PASSWORD=pass pytest -q`
