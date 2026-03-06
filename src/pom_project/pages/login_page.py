@@ -25,9 +25,9 @@ class LoginPage(BasePage):
 
     def expect_loaded(self) -> None:
         expect(self.returning_customer_heading).to_be_visible()
-        expect(self.username_input).to_be_visible()
+        self.wait_for_visible(self.USER_INPUT_SELECTOR)
 
     def login(self, username: str, password: str) -> None:
-        self.username_input.fill(username)
-        self.password_input.fill(password)
-        self.submit_button.click()
+        self.fill_text(self.USER_INPUT_SELECTOR, username)
+        self.fill_text(self.PASS_INPUT_SELECTOR, password)
+        self.click_element(self.SUBMIT_BUTTON_SELECTOR)

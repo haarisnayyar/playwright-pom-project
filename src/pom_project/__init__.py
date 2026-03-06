@@ -1,3 +1,3 @@
 """pom_project package."""
 
-__all__ = ["pages"]
+__all__ = ["db", "pages"]

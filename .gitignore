@@ -16,3 +16,4 @@ build/
 dist/
 *.egg-info/
 reports/
+data/*.sqlite3
