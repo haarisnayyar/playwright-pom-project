@@ -26,8 +26,10 @@ Set values in `.env`:
 - `ATS_LOGIN_PASSWORD`
 - `SAUCEDEMO_URL`
 - `SAUCEDEMO_CREDENTIAL_KEY`
+- `SAUCEDEMO_INVALID_CREDENTIAL_KEY`
 - `SAUCEDEMO_USERNAME`
 - `SAUCEDEMO_PASSWORD`
+- `SAUCEDEMO_INVALID_USERNAME`
 - `SAUCEDEMO_INVALID_PASSWORD`
 
 Framework config file:
@@ -44,7 +46,10 @@ pytest --framework-config path/to/your_config.toml
 
 - Local SQLite store is used for credential retrieval during test execution.
 - DB file path is config-driven (`db_path` in `config/test_config.toml`).
-- Test setup seeds Automation Test Store and SauceDemo credentials into DB from env vars, then tests fetch credentials from DB.
+- Test setup seeds Automation Test Store and two SauceDemo rows into DB from env vars:
+  - valid key: `saucedemo_user`
+  - invalid key: `saucedemo_user_invalid`
+- Tests fetch credentials from DB using these keys.
 
 ## Run checks
 

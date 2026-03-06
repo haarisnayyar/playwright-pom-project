@@ -10,8 +10,7 @@ from pom_project.pages import SauceDemoLoginPage
 def test_saucedemo_invalid_login_shows_error(
     page,
     saucedemo_url: str,
-    saucedemo_credentials: LoginCredentials,
-    saucedemo_invalid_password: str,
+    saucedemo_invalid_credentials: LoginCredentials,
 ) -> None:
     login_page = SauceDemoLoginPage(page)
 
@@ -20,7 +19,10 @@ def test_saucedemo_invalid_login_shows_error(
         login_page.expect_loaded()
 
     with allure.step("Enter valid username and invalid password"):
-        login_page.login(saucedemo_credentials.username, saucedemo_invalid_password)
+        login_page.login(
+            saucedemo_invalid_credentials.username,
+            saucedemo_invalid_credentials.password,
+        )
 
     with allure.step("Assert error message"):
         login_page.expect_invalid_login_error()

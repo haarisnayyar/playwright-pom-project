@@ -3,4 +3,5 @@ browsers = ["chromium"]
 base_url = "https://automationteststore.com/"
 credential_key = "automationteststore_user"
 saucedemo_credential_key = "saucedemo_user"
+saucedemo_invalid_credential_key = "saucedemo_user_invalid"
 db_path = "data/test_data.sqlite3"

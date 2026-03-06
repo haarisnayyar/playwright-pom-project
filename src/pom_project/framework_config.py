@@ -15,6 +15,7 @@ class FrameworkConfig:
     base_url: str
     credential_key: str
     saucedemo_credential_key: str
+    saucedemo_invalid_credential_key: str
     db_path: str
 
 
@@ -72,6 +73,10 @@ def load_framework_config(config_path: str | None = None) -> FrameworkConfig:
     saucedemo_credential_key = os.getenv(
         "SAUCEDEMO_CREDENTIAL_KEY", framework_cfg.get("saucedemo_credential_key", "saucedemo_user")
     )
+    saucedemo_invalid_credential_key = os.getenv(
+        "SAUCEDEMO_INVALID_CREDENTIAL_KEY",
+        framework_cfg.get("saucedemo_invalid_credential_key", "saucedemo_user_invalid"),
+    )
     db_path = os.getenv("TEST_DB_PATH", framework_cfg.get("db_path", "data/test_data.sqlite3"))
 
     return FrameworkConfig(
@@ -79,5 +84,6 @@ def load_framework_config(config_path: str | None = None) -> FrameworkConfig:
         base_url=base_url,
         credential_key=credential_key,
         saucedemo_credential_key=saucedemo_credential_key,
+        saucedemo_invalid_credential_key=saucedemo_invalid_credential_key,
         db_path=db_path,
     )

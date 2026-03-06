@@ -67,11 +67,24 @@ def saucedemo_credential_key(framework_config: FrameworkConfig) -> str:
 
 
 @pytest.fixture(scope="session")
+def saucedemo_invalid_credential_key(framework_config: FrameworkConfig) -> str:
+    return framework_config.saucedemo_invalid_credential_key
+
+
+@pytest.fixture(scope="session")
 def saucedemo_credentials(
     credential_store: CredentialStore,
     saucedemo_credential_key: str,
 ) -> LoginCredentials:
     return credential_store.get_credentials(credential_key=saucedemo_credential_key)
+
+
+@pytest.fixture(scope="session")
+def saucedemo_invalid_credentials(
+    credential_store: CredentialStore,
+    saucedemo_invalid_credential_key: str,
+) -> LoginCredentials:
+    return credential_store.get_credentials(credential_key=saucedemo_invalid_credential_key)
 
 
 @pytest.fixture(scope="session")
@@ -85,11 +98,6 @@ def saucedemo_valid_password(saucedemo_credentials: LoginCredentials) -> str:
 
 
 @pytest.fixture(scope="session")
-def saucedemo_invalid_password(saucedemo_valid_password: str) -> str:
-    return os.getenv("SAUCEDEMO_INVALID_PASSWORD", f"{saucedemo_valid_password}_invalid")
-
-
-@pytest.fixture(scope="session")
 def credential_key(framework_config: FrameworkConfig) -> str:
     return framework_config.credential_key
 
@@ -99,11 +107,17 @@ def credential_store(
     framework_config: FrameworkConfig,
     credential_key: str,
     saucedemo_credential_key: str,
+    saucedemo_invalid_credential_key: str,
 ) -> CredentialStore:
     username = _required_env("ATS_LOGIN_USERNAME")
     password = _required_env("ATS_LOGIN_PASSWORD")
     saucedemo_username = os.getenv("SAUCEDEMO_USERNAME", "standard_user")
     saucedemo_password = os.getenv("SAUCEDEMO_PASSWORD", "secret_sauce")
+    saucedemo_invalid_username = os.getenv("SAUCEDEMO_INVALID_USERNAME", saucedemo_username)
+    saucedemo_invalid_password = os.getenv(
+        "SAUCEDEMO_INVALID_PASSWORD",
+        f"{saucedemo_password}_invalid",
+    )
 
     store = CredentialStore(db_path=framework_config.db_path)
     store.init_schema()
@@ -114,6 +128,13 @@ def credential_store(
     store.upsert_credentials(
         credential_key=saucedemo_credential_key,
         credentials=LoginCredentials(username=saucedemo_username, password=saucedemo_password),
+    )
+    store.upsert_credentials(
+        credential_key=saucedemo_invalid_credential_key,
+        credentials=LoginCredentials(
+            username=saucedemo_invalid_username,
+            password=saucedemo_invalid_password,
+        ),
     )
     return store
 
