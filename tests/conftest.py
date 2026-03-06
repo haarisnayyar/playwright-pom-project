@@ -57,6 +57,26 @@ def app_url(framework_config: FrameworkConfig) -> str:
 
 
 @pytest.fixture(scope="session")
+def saucedemo_url() -> str:
+    return os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com/")
+
+
+@pytest.fixture(scope="session")
+def saucedemo_valid_username() -> str:
+    return os.getenv("SAUCEDEMO_USERNAME", "standard_user")
+
+
+@pytest.fixture(scope="session")
+def saucedemo_valid_password() -> str:
+    return os.getenv("SAUCEDEMO_PASSWORD", "secret_sauce")
+
+
+@pytest.fixture(scope="session")
+def saucedemo_invalid_password(saucedemo_valid_password: str) -> str:
+    return os.getenv("SAUCEDEMO_INVALID_PASSWORD", f"{saucedemo_valid_password}_invalid")
+
+
+@pytest.fixture(scope="session")
 def credential_key(framework_config: FrameworkConfig) -> str:
     return framework_config.credential_key
 

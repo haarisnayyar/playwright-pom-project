@@ -23,6 +23,10 @@ Set values in `.env`:
 - `BROWSER` (`chromium`, `firefox`, `webkit`)
 - `ATS_LOGIN_USERNAME`
 - `ATS_LOGIN_PASSWORD`
+- `SAUCEDEMO_URL`
+- `SAUCEDEMO_USERNAME`
+- `SAUCEDEMO_PASSWORD`
+- `SAUCEDEMO_INVALID_PASSWORD`
 
 Framework config file:
 
@@ -46,6 +50,14 @@ pytest --framework-config path/to/your_config.toml
 ruff check .
 mypy src
 pytest -q
+```
+
+## Task 3 Scenario 1
+
+Run SauceDemo invalid-login scenario:
+
+```bash
+pytest -q tests/task3/test_scenario_1_invalid_login.py
 ```
 
 ## Generate reports (Allure + HTML)
