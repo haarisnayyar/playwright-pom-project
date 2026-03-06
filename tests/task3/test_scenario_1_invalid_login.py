@@ -1,6 +1,7 @@
 import allure
 import pytest
 
+from pom_project.db import LoginCredentials
 from pom_project.pages import SauceDemoLoginPage
 
 
@@ -9,7 +10,7 @@ from pom_project.pages import SauceDemoLoginPage
 def test_saucedemo_invalid_login_shows_error(
     page,
     saucedemo_url: str,
-    saucedemo_valid_username: str,
+    saucedemo_credentials: LoginCredentials,
     saucedemo_invalid_password: str,
 ) -> None:
     login_page = SauceDemoLoginPage(page)
@@ -19,7 +20,7 @@ def test_saucedemo_invalid_login_shows_error(
         login_page.expect_loaded()
 
     with allure.step("Enter valid username and invalid password"):
-        login_page.login(saucedemo_valid_username, saucedemo_invalid_password)
+        login_page.login(saucedemo_credentials.username, saucedemo_invalid_password)
 
     with allure.step("Assert error message"):
         login_page.expect_invalid_login_error()

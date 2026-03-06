@@ -14,6 +14,7 @@ class FrameworkConfig:
     browsers: list[str]
     base_url: str
     credential_key: str
+    saucedemo_credential_key: str
     db_path: str
 
 
@@ -68,11 +69,15 @@ def load_framework_config(config_path: str | None = None) -> FrameworkConfig:
     credential_key = os.getenv(
         "CREDENTIAL_KEY", framework_cfg.get("credential_key", "automationteststore_user")
     )
+    saucedemo_credential_key = os.getenv(
+        "SAUCEDEMO_CREDENTIAL_KEY", framework_cfg.get("saucedemo_credential_key", "saucedemo_user")
+    )
     db_path = os.getenv("TEST_DB_PATH", framework_cfg.get("db_path", "data/test_data.sqlite3"))
 
     return FrameworkConfig(
         browsers=browsers,
         base_url=base_url,
         credential_key=credential_key,
+        saucedemo_credential_key=saucedemo_credential_key,
         db_path=db_path,
     )

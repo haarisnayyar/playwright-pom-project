@@ -62,13 +62,26 @@ def saucedemo_url() -> str:
 
 
 @pytest.fixture(scope="session")
-def saucedemo_valid_username() -> str:
-    return os.getenv("SAUCEDEMO_USERNAME", "standard_user")
+def saucedemo_credential_key(framework_config: FrameworkConfig) -> str:
+    return framework_config.saucedemo_credential_key
 
 
 @pytest.fixture(scope="session")
-def saucedemo_valid_password() -> str:
-    return os.getenv("SAUCEDEMO_PASSWORD", "secret_sauce")
+def saucedemo_credentials(
+    credential_store: CredentialStore,
+    saucedemo_credential_key: str,
+) -> LoginCredentials:
+    return credential_store.get_credentials(credential_key=saucedemo_credential_key)
+
+
+@pytest.fixture(scope="session")
+def saucedemo_valid_username(saucedemo_credentials: LoginCredentials) -> str:
+    return saucedemo_credentials.username
+
+
+@pytest.fixture(scope="session")
+def saucedemo_valid_password(saucedemo_credentials: LoginCredentials) -> str:
+    return saucedemo_credentials.password
 
 
 @pytest.fixture(scope="session")
@@ -85,15 +98,22 @@ def credential_key(framework_config: FrameworkConfig) -> str:
 def credential_store(
     framework_config: FrameworkConfig,
     credential_key: str,
+    saucedemo_credential_key: str,
 ) -> CredentialStore:
     username = _required_env("ATS_LOGIN_USERNAME")
     password = _required_env("ATS_LOGIN_PASSWORD")
+    saucedemo_username = os.getenv("SAUCEDEMO_USERNAME", "standard_user")
+    saucedemo_password = os.getenv("SAUCEDEMO_PASSWORD", "secret_sauce")
 
     store = CredentialStore(db_path=framework_config.db_path)
     store.init_schema()
     store.upsert_credentials(
         credential_key=credential_key,
         credentials=LoginCredentials(username=username, password=password),
+    )
+    store.upsert_credentials(
+        credential_key=saucedemo_credential_key,
+        credentials=LoginCredentials(username=saucedemo_username, password=saucedemo_password),
     )
     return store
 

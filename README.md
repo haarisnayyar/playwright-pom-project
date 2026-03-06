@@ -25,13 +25,14 @@ Set values in `.env`:
 - `ATS_LOGIN_USERNAME`
 - `ATS_LOGIN_PASSWORD`
 - `SAUCEDEMO_URL`
+- `SAUCEDEMO_CREDENTIAL_KEY`
 - `SAUCEDEMO_USERNAME`
 - `SAUCEDEMO_PASSWORD`
 - `SAUCEDEMO_INVALID_PASSWORD`
 
 Framework config file:
 
-- `config/test_config.toml` controls `browser`, `base_url`, `credential_key`, and `db_path`.
+- `config/test_config.toml` controls `browser(s)`, URLs, credential keys, and `db_path`.
 - Env vars override config file values.
 - Optional custom config path:
 
@@ -43,7 +44,7 @@ pytest --framework-config path/to/your_config.toml
 
 - Local SQLite store is used for credential retrieval during test execution.
 - DB file path is config-driven (`db_path` in `config/test_config.toml`).
-- Test setup seeds credentials into DB from env vars, then tests fetch credentials from DB.
+- Test setup seeds Automation Test Store and SauceDemo credentials into DB from env vars, then tests fetch credentials from DB.
 
 ## Run checks
 
