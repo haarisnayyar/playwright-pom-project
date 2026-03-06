@@ -1,6 +1,7 @@
 import allure
 import pytest
 
+from pom_project.db import LoginCredentials
 from pom_project.pages import AutomationStoreXpathPage
 
 
@@ -9,10 +10,15 @@ from pom_project.pages import AutomationStoreXpathPage
 def test_skin_care_sale_items_cart_validation_with_xpath(
     page,
     app_url: str,
+    login_credentials: LoginCredentials,
 ) -> None:
     store_page = AutomationStoreXpathPage(page)
 
-    with allure.step("Go back to home URL"):
+    with allure.step("Login to website"):
+        store_page.open_login(app_url)
+        store_page.login(login_credentials.username, login_credentials.password)
+
+    with allure.step("Go back to home URL after login"):
         store_page.open_home(app_url)
 
     with allure.step("Start with empty cart"):
