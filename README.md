@@ -121,6 +121,20 @@ Run across all browsers:
 pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py --browser chromium --browser firefox --browser webkit
 ```
 
+## Task 4 Scenario 3
+
+Run Skin Care sale-items cart scenario (XPath selectors):
+
+```bash
+pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py
+```
+
+Run across all browsers:
+
+```bash
+pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py --browser chromium --browser firefox --browser webkit
+```
+
 ## Generate reports (Allure + HTML)
 
 ```bash
