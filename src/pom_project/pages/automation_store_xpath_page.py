@@ -38,6 +38,7 @@ class AutomationStoreXpathPage(BasePage):
     LOGIN_PATH = "index.php?rt=account/login"
     CART_PATH = "index.php?rt=checkout/cart"
     SKIN_CARE_PATH = "index.php?rt=product/category&path=43"
+    MEN_PATH = "index.php?rt=product/category&path=49_51"
 
     USERNAME_INPUT_XPATH = "xpath=//input[@id='loginFrm_loginname']"
     PASSWORD_INPUT_XPATH = "xpath=//input[@id='loginFrm_password']"
@@ -91,6 +92,10 @@ class AutomationStoreXpathPage(BasePage):
     CARD_SALE_PRICE_XPATH = (
         "xpath=.//div[contains(@class,'pricenew') or contains(@class,'oneprice')]"
     )
+    MEN_PRODUCT_LINKS_XPATH = "xpath=//a[contains(@class,'prdocutname')]"
+    MEN_CARD_ADD_TO_CART_XPATH = (
+        "xpath=.//a[contains(@class,'productcart') and contains(@title,'Add to Cart')]"
+    )
 
     def __init__(self, page: Page) -> None:
         super().__init__(page)
@@ -128,6 +133,11 @@ class AutomationStoreXpathPage(BasePage):
         self.goto_path(base_url, self.SKIN_CARE_PATH)
         self.page.wait_for_load_state("domcontentloaded")
         expect(self.locator(self.SKIN_CARE_PRODUCT_CARDS_XPATH).first).to_be_visible()
+
+    def open_men_section(self, base_url: str) -> None:
+        self.goto_path(base_url, self.MEN_PATH)
+        self.page.wait_for_load_state("domcontentloaded")
+        expect(self.locator(self.MEN_PRODUCT_LINKS_XPATH).first).to_be_visible()
 
     def open_dove_products_from_brand_scrolling_list(self) -> None:
         dove_brand_link = self.locator(self.DOVE_BRAND_LINK_XPATH)
@@ -242,6 +252,46 @@ class AutomationStoreXpathPage(BasePage):
             total_amount=total_amount,
         )
 
+    def add_men_product_ending_with_m_and_get_name(self, base_url: str) -> str:
+        product_links = self.locator(self.MEN_PRODUCT_LINKS_XPATH)
+        selected_name: str | None = None
+
+        for index in range(product_links.count()):
+            product_link = product_links.nth(index)
+            href = product_link.get_attribute("href") or ""
+            if "rt=product/product" not in href:
+                continue
+
+            raw_name = self._normalize_text(product_link.inner_text())
+            normalized_for_check = self._normalize_name_for_suffix_check(raw_name)
+            if not normalized_for_check.casefold().endswith("m"):
+                continue
+
+            card = product_link.locator(
+                "xpath=ancestor::div[contains(@class,'fixed_wrapper')]/"
+                "following-sibling::div[contains(@class,'thumbnail')][1]"
+            )
+            add_to_cart = card.locator(self.MEN_CARD_ADD_TO_CART_XPATH)
+            if add_to_cart.count() == 0:
+                continue
+
+            add_to_cart.first.scroll_into_view_if_needed()
+            add_to_cart.first.click()
+            self.page.wait_for_timeout(400)
+            selected_name = normalized_for_check
+            break
+
+        if selected_name is None:
+            raise AssertionError("No Men product found with name ending in 'M'.")
+
+        self.goto_path(base_url, self.CART_PATH)
+        self.page.wait_for_load_state("domcontentloaded")
+        self.wait_for_visible(self.CART_TABLE_XPATH)
+        return selected_name
+
+    def get_first_cart_item_name(self) -> str:
+        return self._normalize_text(self.element_text(self.CART_ITEM_NAME_XPATH))
+
     @staticmethod
     def _parse_currency(value: str) -> float:
         digits = re.sub(r"[^0-9.]", "", value)
@@ -250,3 +300,8 @@ class AutomationStoreXpathPage(BasePage):
     @staticmethod
     def _normalize_text(value: str) -> str:
         return " ".join(value.split())
+
+    @staticmethod
+    def _normalize_name_for_suffix_check(value: str) -> str:
+        cleaned = re.sub(r"\s*\([^)]*\)\s*$", "", value)
+        return " ".join(cleaned.split())

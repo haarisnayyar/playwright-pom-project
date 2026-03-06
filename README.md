@@ -135,6 +135,20 @@ Run across all browsers:
 pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py --browser chromium --browser firefox --browser webkit
 ```
 
+## Task 4 Scenario 4
+
+Run Men product-name-ends-with-M scenario (XPath selectors):
+
+```bash
+pytest -q tests/task4/test_scenario_4_men_name_ends_with_m_xpath.py
+```
+
+Run across all browsers:
+
+```bash
+pytest -q tests/task4/test_scenario_4_men_name_ends_with_m_xpath.py --browser chromium --browser firefox --browser webkit
+```
+
 ## Generate reports (Allure + HTML)
 
 ```bash
