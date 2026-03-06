@@ -93,6 +93,20 @@ Run the same scenario across all browsers:
 pytest -q tests/task3/test_scenario_2_valid_login.py --browser chromium --browser firefox --browser webkit
 ```
 
+## Task 4 Scenario 1
+
+Run Automation Test Store Dove newest-item cart scenario (XPath selectors):
+
+```bash
+pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py
+```
+
+Run across all browsers:
+
+```bash
+pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py --browser chromium --browser firefox --browser webkit
+```
+
 ## Generate reports (Allure + HTML)
 
 ```bash
