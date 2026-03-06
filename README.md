@@ -107,6 +107,20 @@ Run across all browsers:
 pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py --browser chromium --browser firefox --browser webkit
 ```
 
+## Task 4 Scenario 2
+
+Run Apparel/T-shirts/Shoes cart scenario (CSS selectors):
+
+```bash
+pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py
+```
+
+Run across all browsers:
+
+```bash
+pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py --browser chromium --browser firefox --browser webkit
+```
+
 ## Generate reports (Allure + HTML)
 
 ```bash
