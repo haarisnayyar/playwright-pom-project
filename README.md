@@ -161,6 +161,46 @@ To view Allure report locally, install the Allure CLI once and then run:
 allure serve reports/allure-results
 ```
 
+## One-command all-scenarios run across all browsers
+
+Run entire pytest suite on Chromium, Firefox, and WebKit and generate a combined Allure report:
+
+```bash
+./scripts/run_all_pytest.sh
+```
+
+Alternative:
+
+```bash
+make pytest-all
+```
+
+Optional environment overrides:
+
+- `HEADED=true` to run browsers in headed mode
+- `SLOWMO_MS=150` to slow interactions
+- `MAX_ATTEMPTS=2` retry count per browser if transient failures occur
+
+Outputs:
+
+- Per-browser pytest HTML reports:
+  - `reports/pytest-report-chromium.html`
+  - `reports/pytest-report-firefox.html`
+  - `reports/pytest-report-webkit.html`
+- Per-browser Allure raw results:
+  - `reports/allure-results-chromium`
+  - `reports/allure-results-firefox`
+  - `reports/allure-results-webkit`
+- Combined Allure:
+  - `reports/allure-results`
+  - `reports/allure-html/index.html`
+
+Open the generated combined Allure HTML report:
+
+```bash
+allure open reports/allure-html
+```
+
 ## Hooks
 
 - `pytest_runtest_makereport` hook captures screenshot on test failure.
