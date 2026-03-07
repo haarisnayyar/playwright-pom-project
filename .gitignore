@@ -1,4 +1,5 @@
 __pycache__/
+.DS_Store
 .pytest_cache/
 .venv/
 env/
@@ -17,3 +18,4 @@ dist/
 *.egg-info/
 reports/
 data/*.sqlite3
+playwright-pom-bdd/
