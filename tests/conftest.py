@@ -5,7 +5,6 @@ import re
 from pathlib import Path
 
 import pytest
-from dotenv import load_dotenv
 
 from pom_project.db import CredentialStore, LoginCredentials
 from pom_project.framework_config import FrameworkConfig, load_framework_config
@@ -14,18 +13,6 @@ try:
     import allure
 except ImportError:  # pragma: no cover - optional in some local environments
     allure = None
-
-load_dotenv()
-
-
-def _required_env(name: str) -> str:
-    value = os.getenv(name)
-    if value:
-        return value
-    raise pytest.UsageError(
-        f"Missing required environment variable: {name}. "
-        "Set it in a local .env file or export it before running tests."
-    )
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -103,39 +90,9 @@ def credential_key(framework_config: FrameworkConfig) -> str:
 
 
 @pytest.fixture(scope="session")
-def credential_store(
-    framework_config: FrameworkConfig,
-    credential_key: str,
-    saucedemo_credential_key: str,
-    saucedemo_invalid_credential_key: str,
-) -> CredentialStore:
-    username = _required_env("ATS_LOGIN_USERNAME")
-    password = _required_env("ATS_LOGIN_PASSWORD")
-    saucedemo_username = os.getenv("SAUCEDEMO_USERNAME", "standard_user")
-    saucedemo_password = os.getenv("SAUCEDEMO_PASSWORD", "secret_sauce")
-    saucedemo_invalid_username = os.getenv("SAUCEDEMO_INVALID_USERNAME", saucedemo_username)
-    saucedemo_invalid_password = os.getenv(
-        "SAUCEDEMO_INVALID_PASSWORD",
-        f"{saucedemo_password}_invalid",
-    )
-
+def credential_store(framework_config: FrameworkConfig) -> CredentialStore:
     store = CredentialStore(db_path=framework_config.db_path)
     store.init_schema()
-    store.upsert_credentials(
-        credential_key=credential_key,
-        credentials=LoginCredentials(username=username, password=password),
-    )
-    store.upsert_credentials(
-        credential_key=saucedemo_credential_key,
-        credentials=LoginCredentials(username=saucedemo_username, password=saucedemo_password),
-    )
-    store.upsert_credentials(
-        credential_key=saucedemo_invalid_credential_key,
-        credentials=LoginCredentials(
-            username=saucedemo_invalid_username,
-            password=saucedemo_invalid_password,
-        ),
-    )
     return store
 
 

@@ -9,54 +9,50 @@ python3 -m pip install -r requirements-dev.txt
 python3 -m playwright install chromium firefox webkit
 ```
 
-## Configuration and Secrets
+## Configuration
 
-Create a local env file from the template:
+Optional runtime overrides can be set in the shell or copied into a local `.env` file from the
+template:
 
 ```bash
 cp .env.example .env
 ```
 
-Set values in `.env`:
+Supported non-secret overrides:
 
 - `APP_URL`
 - `BROWSER` (`chromium`, `firefox`, `webkit`)
 - `BROWSERS` (optional comma-separated loop, for example `chromium,firefox,webkit`)
-- `ATS_LOGIN_USERNAME`
-- `ATS_LOGIN_PASSWORD`
 - `SAUCEDEMO_URL`
 - `SAUCEDEMO_CREDENTIAL_KEY`
 - `SAUCEDEMO_INVALID_CREDENTIAL_KEY`
-- `SAUCEDEMO_USERNAME`
-- `SAUCEDEMO_PASSWORD`
-- `SAUCEDEMO_INVALID_USERNAME`
-- `SAUCEDEMO_INVALID_PASSWORD`
 
 Framework config file:
 
 - `config/test_config.toml` controls `browser(s)`, URLs, credential keys, and `db_path`.
-- Env vars override config file values.
+- Env vars override config file values when set in the runtime environment.
 - Optional custom config path:
 
 ```bash
-pytest --framework-config path/to/your_config.toml
+venv/bin/pytest --framework-config path/to/your_config.toml
 ```
 
 ## Database Connectivity
 
 - Local SQLite store is used for credential retrieval during test execution.
-- DB file path is config-driven (`db_path` in `config/test_config.toml`).
-- Test setup seeds Automation Test Store and two SauceDemo rows into DB from env vars:
-  - valid key: `saucedemo_user`
-  - invalid key: `saucedemo_user_invalid`
-- Tests fetch credentials from DB using these keys.
+- DB file path is `data/test_data.sqlite3` by default.
+- DB table is `login_credentials`.
+- `data/test_data.sqlite3` is local-only and must not be committed.
+- Credentials must not be stored in `.env`, `.env.example`, README, or source files.
+- Tests fetch credentials from SQLite using `CredentialStore` and configured credential keys.
 
 ## Run checks
 
 ```bash
-ruff check .
-mypy src
-pytest -q
+venv/bin/ruff check .
+venv/bin/mypy src
+venv/bin/pytest
+venv/bin/pytest --browser chromium --browser firefox --browser webkit
 ```
 
 ## Task 3 Scenario 1
@@ -64,19 +60,19 @@ pytest -q
 Run SauceDemo invalid-login scenario:
 
 ```bash
-pytest -q tests/task3/test_scenario_1_invalid_login.py
+venv/bin/pytest -q tests/task3/test_scenario_1_invalid_login.py
 ```
 
 Run the same scenario in a Safari-inclusive loop (Playwright Safari = `webkit`):
 
 ```bash
-pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit
+venv/bin/pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit
 ```
 
 Headed version:
 
 ```bash
-pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit --headed --slowmo 250
+venv/bin/pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --browser firefox --browser webkit --headed --slowmo 250
 ```
 
 ## Task 3 Scenario 2
@@ -84,13 +80,13 @@ pytest -q tests/task3/test_scenario_1_invalid_login.py --browser chromium --brow
 Run SauceDemo valid-login scenario:
 
 ```bash
-pytest -q tests/task3/test_scenario_2_valid_login.py
+venv/bin/pytest -q tests/task3/test_scenario_2_valid_login.py
 ```
 
 Run the same scenario across all browsers:
 
 ```bash
-pytest -q tests/task3/test_scenario_2_valid_login.py --browser chromium --browser firefox --browser webkit
+venv/bin/pytest -q tests/task3/test_scenario_2_valid_login.py --browser chromium --browser firefox --browser webkit
 ```
 
 ## Task 4 Scenario 1
@@ -98,13 +94,13 @@ pytest -q tests/task3/test_scenario_2_valid_login.py --browser chromium --browse
 Run Automation Test Store Dove newest-item cart scenario (XPath selectors):
 
 ```bash
-pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py
+venv/bin/pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py
 ```
 
 Run across all browsers:
 
 ```bash
-pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py --browser chromium --browser firefox --browser webkit
+venv/bin/pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py --browser chromium --browser firefox --browser webkit
 ```
 
 ## Task 4 Scenario 2
@@ -112,13 +108,13 @@ pytest -q tests/task4/test_scenario_1_dove_newest_item_cart.py --browser chromiu
 Run Apparel/T-shirts/Shoes cart scenario (CSS selectors):
 
 ```bash
-pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py
+venv/bin/pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py
 ```
 
 Run across all browsers:
 
 ```bash
-pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py --browser chromium --browser firefox --browser webkit
+venv/bin/pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py --browser chromium --browser firefox --browser webkit
 ```
 
 ## Task 4 Scenario 3
@@ -126,13 +122,13 @@ pytest -q tests/task4/test_scenario_2_apparel_shoes_css_cart.py --browser chromi
 Run Skin Care sale-items cart scenario (XPath selectors):
 
 ```bash
-pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py
+venv/bin/pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py
 ```
 
 Run across all browsers:
 
 ```bash
-pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py --browser chromium --browser firefox --browser webkit
+venv/bin/pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py --browser chromium --browser firefox --browser webkit
 ```
 
 ## Task 4 Scenario 4
@@ -140,19 +136,19 @@ pytest -q tests/task4/test_scenario_3_skin_care_sale_items_xpath.py --browser ch
 Run Men product-name-ends-with-M scenario (XPath selectors):
 
 ```bash
-pytest -q tests/task4/test_scenario_4_men_name_ends_with_m_xpath.py
+venv/bin/pytest -q tests/task4/test_scenario_4_men_name_ends_with_m_xpath.py
 ```
 
 Run across all browsers:
 
 ```bash
-pytest -q tests/task4/test_scenario_4_men_name_ends_with_m_xpath.py --browser chromium --browser firefox --browser webkit
+venv/bin/pytest -q tests/task4/test_scenario_4_men_name_ends_with_m_xpath.py --browser chromium --browser firefox --browser webkit
 ```
 
 ## Generate reports (Allure + HTML)
 
 ```bash
-pytest -q --html=reports/pytest-report.html --self-contained-html --alluredir=reports/allure-results
+venv/bin/pytest -q --html=reports/pytest-report.html --self-contained-html --alluredir=reports/allure-results
 ```
 
 To view Allure report locally, install the Allure CLI once and then run:
@@ -218,11 +214,11 @@ allure open reports/allure-html
 
 ## Notes
 
-- Example cross-browser run from env:
-  - `BROWSER=firefox pytest -q`
-- Example Safari run:
-  - `BROWSER=webkit pytest -q`
-- Example browser loop from env:
-  - `BROWSERS=chromium,firefox,webkit pytest -q tests/task3/test_scenario_1_invalid_login.py`
-- Example full override run:
-  - `APP_URL=https://staging.your-app.com BROWSER=webkit ATS_LOGIN_USERNAME=user ATS_LOGIN_PASSWORD=pass pytest -q`
+- Example Firefox run:
+  - `venv/bin/pytest --browser firefox`
+- Example WebKit run:
+  - `venv/bin/pytest --browser webkit`
+- Example cross-browser run:
+  - `venv/bin/pytest --browser chromium --browser firefox --browser webkit`
+- Example app URL override:
+  - `APP_URL=https://staging.your-app.com venv/bin/pytest --browser webkit`

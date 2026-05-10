@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_URL: ${{ vars.APP_URL || 'https://automationteststore.com/' }}
-      ATS_LOGIN_USERNAME: ${{ secrets.ATS_LOGIN_USERNAME }}
-      ATS_LOGIN_PASSWORD: ${{ secrets.ATS_LOGIN_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -38,15 +36,15 @@ jobs:
         run: |
           mypy src
 
-      - name: Run tests
-        if: ${{ env.ATS_LOGIN_USERNAME != '' && env.ATS_LOGIN_PASSWORD != '' }}
+      - name: Run tests when local SQLite DB is available
+        if: ${{ hashFiles('data/test_data.sqlite3') != '' }}
         run: |
           pytest -q --html=reports/pytest-report.html --self-contained-html --alluredir=reports/allure-results
 
-      - name: Skip e2e tests if secrets are missing
-        if: ${{ env.ATS_LOGIN_USERNAME == '' || env.ATS_LOGIN_PASSWORD == '' }}
+      - name: Skip e2e tests when local SQLite DB is absent
+        if: ${{ hashFiles('data/test_data.sqlite3') == '' }}
         run: |
-          echo "ATS_LOGIN_USERNAME/ATS_LOGIN_PASSWORD are not set; skipping login e2e test run."
+          echo "data/test_data.sqlite3 is local-only and not committed; skipping login e2e test run."
 
       - name: Upload test reports
         if: always()
